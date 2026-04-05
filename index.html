@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root CA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            background: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon svg {
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #f1f5f9;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #0ea5e9;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.85rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            margin-bottom: 2rem;
+        }
+
+        .download-btn:hover {
+            background: #0284c7;
+        }
+
+        .steps {
+            text-align: left;
+            border-top: 1px solid #334155;
+            padding-top: 1.5rem;
+        }
+
+        .steps h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .platform {
+            margin-bottom: 1.25rem;
+        }
+
+        .platform h3 {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            margin-bottom: 0.35rem;
+        }
+
+        .platform ol {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            padding-left: 1.25rem;
+        }
+
+        .platform ol li strong {
+            color: #cbd5e1;
+        }
+
+        .warning {
+            background: #1c1917;
+            border: 1px solid #854d0e;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+            color: #fbbf24;
+            margin-top: 0.35rem;
+            text-align: left;
+        }
+
+        .fingerprint {
+            border-top: 1px solid #334155;
+            padding-top: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .fingerprint h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .fingerprint code {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                <path d="M9 12l2 2 4-4"/>
+            </svg>
+        </div>
+
+        <h1>Root CA Certificate</h1>
+        <p class="subtitle">
+            Root CA for self-hosted services.
+            Install this certificate to trust HTTPS connections.
+        </p>
+
+        <a href="ca.pem" class="download-btn" download>Download ca.pem</a>
+
+        <div class="steps">
+            <h2>Installation</h2>
+
+            <div class="platform">
+                <h3>iPhone / iPad</h3>
+                <ol>
+                    <li>Tap <strong>Download</strong> above</li>
+                    <li><strong>Settings</strong> &rarr; Profile Downloaded &rarr; Install</li>
+                    <li><strong>Settings</strong> &rarr; General &rarr; About &rarr; <strong>Certificate Trust Settings</strong> &rarr; Enable</li>
+                </ol>
+                <div class="warning">Step 3 is required! Without it, the certificate won't be trusted.</div>
+            </div>
+
+            <div class="platform">
+                <h3>Android</h3>
+                <ol>
+                    <li>Tap <strong>Download</strong> above</li>
+                    <li><strong>Settings</strong> &rarr; Security &rarr; Encryption &amp; Credentials &rarr; <strong>Install a certificate</strong> &rarr; CA certificate</li>
+                </ol>
+            </div>
+
+            <div class="platform">
+                <h3>Chrome / Edge (Linux)</h3>
+                <ol>
+                    <li>Download <code>ca.pem</code></li>
+                    <li>Run: <code>certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "Home Root CA" -i ca.pem</code></li>
+                </ol>
+            </div>
+
+            <div class="platform">
+                <h3>Firefox</h3>
+                <ol>
+                    <li>Settings &rarr; Privacy &amp; Security &rarr; Certificates &rarr; <strong>View Certificates</strong></li>
+                    <li>Authorities &rarr; Import &rarr; select <code>ca.pem</code></li>
+                    <li>Check: <strong>Trust this CA to identify websites</strong></li>
+                </ol>
+            </div>
+
+            <div class="platform">
+                <h3>macOS</h3>
+                <ol>
+                    <li>Download <code>ca.pem</code></li>
+                    <li>Run: <code>sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ca.pem</code></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="fingerprint">
+            <h2>SHA-256 Fingerprint</h2>
+            <code>99:A4:66:A0:4A:9A:C8:00:B5:42:0A:8B:14:33:B3:CC:80:D6:9B:2D:82:F1:55:9C:05:B1:EE:E7:D4:90:73:C4</code>
+        </div>
+    </div>
+
+</body>
+</html>
