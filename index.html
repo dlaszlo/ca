@@ -102,21 +102,24 @@
             margin-bottom: 0.5rem;
             border: 1px solid #334155;
             border-radius: 0.5rem;
+            overflow: hidden;
         }
 
-        .platform summary {
+        .platform-header {
             font-size: 0.95rem;
             color: #e2e8f0;
             padding: 0.75rem 1rem;
             cursor: pointer;
-            list-style: none;
+            display: flex;
+            align-items: center;
+            user-select: none;
         }
 
-        .platform summary::-webkit-details-marker {
-            display: none;
+        .platform-header:hover {
+            color: #0ea5e9;
         }
 
-        .platform summary::before {
+        .platform-header::before {
             content: "\25B8";
             margin-right: 0.5rem;
             color: #64748b;
@@ -124,15 +127,19 @@
             transition: transform 0.2s;
         }
 
-        .platform[open] summary::before {
+        .platform-header.active::before {
             transform: rotate(90deg);
         }
 
-        .platform summary:hover {
-            color: #0ea5e9;
+        .platform .content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 1rem;
         }
 
-        .platform .content {
+        .platform .content.open {
+            max-height: 300px;
             padding: 0 1rem 0.75rem;
         }
 
@@ -233,8 +240,8 @@
         <div class="steps">
             <h2>Installation</h2>
 
-            <details class="platform">
-                <summary>iPhone / iPad</summary>
+            <div class="platform">
+                <div class="platform-header" onclick="toggle(this)">iPhone / iPad</div>
                 <div class="content">
                     <ol>
                         <li>Tap <strong>Download</strong> above</li>
@@ -242,20 +249,20 @@
                         <li><strong>Settings</strong> &rarr; General &rarr; About &rarr; <strong>Certificate Trust Settings</strong> &rarr; Enable</li>
                     </ol>
                 </div>
-            </details>
+            </div>
 
-            <details class="platform">
-                <summary>Android</summary>
+            <div class="platform">
+                <div class="platform-header" onclick="toggle(this)">Android</div>
                 <div class="content">
                     <ol>
                         <li>Tap <strong>Download</strong> above</li>
                         <li><strong>Settings</strong> &rarr; Security &rarr; Encryption &amp; Credentials &rarr; <strong>Install a certificate</strong> &rarr; CA certificate</li>
                     </ol>
                 </div>
-            </details>
+            </div>
 
-            <details class="platform">
-                <summary>Windows</summary>
+            <div class="platform">
+                <div class="platform-header" onclick="toggle(this)">Windows</div>
                 <div class="content">
                     <ol>
                         <li>Download <code>ca.pem</code></li>
@@ -264,48 +271,48 @@
                         <li>Place all certificates in: <strong>Trusted Root Certification Authorities</strong> &rarr; Next &rarr; Finish</li>
                     </ol>
                 </div>
-            </details>
+            </div>
 
-            <details class="platform">
-                <summary>macOS</summary>
+            <div class="platform">
+                <div class="platform-header" onclick="toggle(this)">macOS</div>
                 <div class="content">
                     <ol>
                         <li>Download <code>ca.pem</code></li>
                         <li>Run:
-                            <div class="copyable" onclick="copyText(this)">
+                            <div class="copyable" onclick="event.stopPropagation(); copyText(this)">
                                 <code>sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ca.pem</code>
                                 <svg class="copy-icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                             </div>
                         </li>
                     </ol>
                 </div>
-            </details>
+            </div>
 
-            <details class="platform">
-                <summary>Chrome / Edge (Linux)</summary>
+            <div class="platform">
+                <div class="platform-header" onclick="toggle(this)">Chrome / Edge (Linux)</div>
                 <div class="content">
                     <ol>
                         <li>Download <code>ca.pem</code></li>
                         <li>Run:
-                            <div class="copyable" onclick="copyText(this)">
+                            <div class="copyable" onclick="event.stopPropagation(); copyText(this)">
                                 <code>certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "Home Root CA" -i ca.pem</code>
                                 <svg class="copy-icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                             </div>
                         </li>
                     </ol>
                 </div>
-            </details>
+            </div>
 
-            <details class="platform">
-                <summary>Firefox</summary>
-                <div class="content">
+            <div class="platform" id="firefox">
+                <div class="platform-header active" onclick="toggle(this)">Firefox</div>
+                <div class="content open">
                     <ol>
                         <li>Settings &rarr; Privacy &amp; Security &rarr; Certificates &rarr; <strong>View Certificates</strong></li>
                         <li>Authorities &rarr; Import &rarr; select <code>ca.pem</code></li>
                         <li>Check: <strong>Trust this CA to identify websites</strong></li>
                     </ol>
                 </div>
-            </details>
+            </div>
         </div>
 
         <div class="fingerprint">
@@ -314,6 +321,23 @@
         </div>
     </div>
     <script>
+        function toggle(header) {
+            var content = header.nextElementSibling;
+            var isOpen = content.classList.contains('open');
+
+            // Osszes bezarasa
+            document.querySelectorAll('.platform .content.open').forEach(function(c) {
+                c.classList.remove('open');
+                c.previousElementSibling.classList.remove('active');
+            });
+
+            // Ha nem volt nyitva, kinyitjuk
+            if (!isOpen) {
+                content.classList.add('open');
+                header.classList.add('active');
+            }
+        }
+
         function copyText(el) {
             var text = el.querySelector('code').textContent;
             navigator.clipboard.writeText(text).then(function() {
