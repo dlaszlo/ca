@@ -325,16 +325,19 @@
             var content = header.nextElementSibling;
             var isOpen = content.classList.contains('open');
 
-            // Osszes bezarasa
-            document.querySelectorAll('.platform .content.open').forEach(function(c) {
+            // Tobbi bezarasa, az ujat kinyitasa egyszerre
+            document.querySelectorAll('.platform .content').forEach(function(c) {
+                if (c === content) return;
                 c.classList.remove('open');
                 c.previousElementSibling.classList.remove('active');
             });
 
-            // Ha nem volt nyitva, kinyitjuk
             if (!isOpen) {
                 content.classList.add('open');
                 header.classList.add('active');
+            } else {
+                content.classList.remove('open');
+                header.classList.remove('active');
             }
         }
 
