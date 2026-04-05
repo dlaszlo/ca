@@ -99,13 +99,41 @@
         }
 
         .platform {
-            margin-bottom: 1.25rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
         }
 
-        .platform h3 {
+        .platform summary {
             font-size: 0.95rem;
             color: #e2e8f0;
-            margin-bottom: 0.35rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .platform summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .platform summary::before {
+            content: "\25B8";
+            margin-right: 0.5rem;
+            color: #64748b;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .platform[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .platform summary:hover {
+            color: #0ea5e9;
+        }
+
+        .platform .content {
+            padding: 0 1rem 0.75rem;
         }
 
         .platform ol {
@@ -205,67 +233,79 @@
         <div class="steps">
             <h2>Installation</h2>
 
-            <div class="platform">
-                <h3>iPhone / iPad</h3>
-                <ol>
-                    <li>Tap <strong>Download</strong> above</li>
-                    <li><strong>Settings</strong> &rarr; Profile Downloaded &rarr; Install</li>
-                    <li><strong>Settings</strong> &rarr; General &rarr; About &rarr; <strong>Certificate Trust Settings</strong> &rarr; Enable</li>
-                </ol>
-            </div>
+            <details class="platform">
+                <summary>iPhone / iPad</summary>
+                <div class="content">
+                    <ol>
+                        <li>Tap <strong>Download</strong> above</li>
+                        <li><strong>Settings</strong> &rarr; Profile Downloaded &rarr; Install</li>
+                        <li><strong>Settings</strong> &rarr; General &rarr; About &rarr; <strong>Certificate Trust Settings</strong> &rarr; Enable</li>
+                    </ol>
+                </div>
+            </details>
 
-            <div class="platform">
-                <h3>Android</h3>
-                <ol>
-                    <li>Tap <strong>Download</strong> above</li>
-                    <li><strong>Settings</strong> &rarr; Security &rarr; Encryption &amp; Credentials &rarr; <strong>Install a certificate</strong> &rarr; CA certificate</li>
-                </ol>
-            </div>
+            <details class="platform">
+                <summary>Android</summary>
+                <div class="content">
+                    <ol>
+                        <li>Tap <strong>Download</strong> above</li>
+                        <li><strong>Settings</strong> &rarr; Security &rarr; Encryption &amp; Credentials &rarr; <strong>Install a certificate</strong> &rarr; CA certificate</li>
+                    </ol>
+                </div>
+            </details>
 
-            <div class="platform">
-                <h3>Chrome / Edge (Linux)</h3>
-                <ol>
-                    <li>Download <code>ca.pem</code></li>
-                    <li>Run:
-                        <div class="copyable" onclick="copyText(this)">
-                            <code>certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "Home Root CA" -i ca.pem</code>
-                            <svg class="copy-icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                        </div>
-                    </li>
-                </ol>
-            </div>
+            <details class="platform">
+                <summary>Windows</summary>
+                <div class="content">
+                    <ol>
+                        <li>Download <code>ca.pem</code></li>
+                        <li>Double-click the file &rarr; <strong>Install Certificate</strong></li>
+                        <li>Store Location: <strong>Local Machine</strong> &rarr; Next</li>
+                        <li>Place all certificates in: <strong>Trusted Root Certification Authorities</strong> &rarr; Next &rarr; Finish</li>
+                    </ol>
+                </div>
+            </details>
 
-            <div class="platform">
-                <h3>Firefox</h3>
-                <ol>
-                    <li>Settings &rarr; Privacy &amp; Security &rarr; Certificates &rarr; <strong>View Certificates</strong></li>
-                    <li>Authorities &rarr; Import &rarr; select <code>ca.pem</code></li>
-                    <li>Check: <strong>Trust this CA to identify websites</strong></li>
-                </ol>
-            </div>
+            <details class="platform">
+                <summary>macOS</summary>
+                <div class="content">
+                    <ol>
+                        <li>Download <code>ca.pem</code></li>
+                        <li>Run:
+                            <div class="copyable" onclick="copyText(this)">
+                                <code>sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ca.pem</code>
+                                <svg class="copy-icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
 
-            <div class="platform">
-                <h3>Windows</h3>
-                <ol>
-                    <li>Download <code>ca.pem</code></li>
-                    <li>Double-click the file &rarr; <strong>Install Certificate</strong></li>
-                    <li>Store Location: <strong>Local Machine</strong> &rarr; Next</li>
-                    <li>Place all certificates in: <strong>Trusted Root Certification Authorities</strong> &rarr; Next &rarr; Finish</li>
-                </ol>
-            </div>
+            <details class="platform">
+                <summary>Chrome / Edge (Linux)</summary>
+                <div class="content">
+                    <ol>
+                        <li>Download <code>ca.pem</code></li>
+                        <li>Run:
+                            <div class="copyable" onclick="copyText(this)">
+                                <code>certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "Home Root CA" -i ca.pem</code>
+                                <svg class="copy-icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
 
-            <div class="platform">
-                <h3>macOS</h3>
-                <ol>
-                    <li>Download <code>ca.pem</code></li>
-                    <li>Run:
-                        <div class="copyable" onclick="copyText(this)">
-                            <code>sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ca.pem</code>
-                            <svg class="copy-icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                        </div>
-                    </li>
-                </ol>
-            </div>
+            <details class="platform">
+                <summary>Firefox</summary>
+                <div class="content">
+                    <ol>
+                        <li>Settings &rarr; Privacy &amp; Security &rarr; Certificates &rarr; <strong>View Certificates</strong></li>
+                        <li>Authorities &rarr; Import &rarr; select <code>ca.pem</code></li>
+                        <li>Check: <strong>Trust this CA to identify websites</strong></li>
+                    </ol>
+                </div>
+            </details>
         </div>
 
         <div class="fingerprint">
